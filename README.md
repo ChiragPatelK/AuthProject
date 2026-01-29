@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🔐 Backend Authentication & Authorization API
 
 A complete **Node.js + Express + PostgreSQL** backend project implementing  
@@ -174,3 +175,7 @@ Backend Developer (Learning MERN Stack)
 
 📜 License
 This project is for educational purposes.
+=======
+# AuthProject
+This is an Auth based project using express.
+>>>>>>> 0c9a81da9b03b10f8617f190eec73b8496274910
