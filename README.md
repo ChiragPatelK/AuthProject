@@ -62,23 +62,41 @@ using **Sequelize ORM**, **Migrations**, **Transactions**, and **Validation**.
 ## 📁 Project Structure
 
 backend/
+
 ├── migrations/
+
 ├── seeders/
+
 ├── src/
+
 │ ├── config/
+
 │ │ ├── database.js
+
 │ │ └── mail.js
+
 │ ├── controllers/
+
 │ ├── middlewares/
+
 │ ├── models/
+
 │ ├── routes/
+
 │ ├── utils/
+
 │ ├── validators/
+
 │ ├── app.js
+
 │ └── server.js
+
 ├── .env
+
 ├── .sequelizerc
+
 ├── package.json
+
 └── README.md
 
 ---
@@ -142,12 +160,16 @@ MAIL_PASS=your_gmail_app_password
 ```
 
 🛠 Setup & Run
+
 1️⃣ Install dependencies
 npm install
+
 2️⃣ Run migrations
 npx sequelize-cli db:migrate
+
 3️⃣ Start server
 npm run dev
+
 🧪 Testing
 Use Postman
 
@@ -176,9 +198,9 @@ Internship Submissions
 
 Backend Learning Reference
 
-📜 License
+# 📜 License
+
 This project is for educational purposes.
-=======
 
 # AuthProject
 
