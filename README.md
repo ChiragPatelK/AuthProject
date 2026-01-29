@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # 🔐 Backend Authentication & Authorization API
 
 A complete **Node.js + Express + PostgreSQL** backend project implementing  
@@ -13,6 +12,7 @@ using **Sequelize ORM**, **Migrations**, **Transactions**, and **Validation**.
 ## 🚀 Features
 
 ### 🔑 Authentication
+
 - User Registration
 - User Login (JWT)
 - Change Password
@@ -20,18 +20,21 @@ using **Sequelize ORM**, **Migrations**, **Transactions**, and **Validation**.
 - Reset Password using OTP
 
 ### 🛡 Authorization
+
 - JWT Authentication Middleware
 - Role-Based Access Control (User / Admin)
 - Protected Routes
 - Ownership-based access (`/me` APIs)
 
 ### 👤 User Management
+
 - Get Logged-in User Profile
 - Update Own Profile
 - Delete Own Account
 - Admin-only: Get All Users
 
 ### 🔐 Security Best Practices
+
 - Password hashing using **bcrypt**
 - OTP expiry handling
 - Anti user-enumeration protection
@@ -42,16 +45,16 @@ using **Sequelize ORM**, **Migrations**, **Transactions**, and **Validation**.
 
 ## 🧱 Tech Stack
 
-| Technology | Usage |
-|---------|------|
-| Node.js | Runtime |
-| Express.js | Web Framework |
-| PostgreSQL | Database |
-| Sequelize | ORM |
-| JWT | Authentication |
-| bcrypt | Password hashing |
-| Zod | Request validation |
-| Nodemailer | Email (OTP) |
+| Technology    | Usage                |
+| ------------- | -------------------- |
+| Node.js       | Runtime              |
+| Express.js    | Web Framework        |
+| PostgreSQL    | Database             |
+| Sequelize     | ORM                  |
+| JWT           | Authentication       |
+| bcrypt        | Password hashing     |
+| Zod           | Request validation   |
+| Nodemailer    | Email (OTP)          |
 | Sequelize CLI | Migrations & Seeders |
 
 ---
@@ -78,7 +81,6 @@ backend/
 ├── package.json
 └── README.md
 
-
 ---
 
 ## 🔄 Authentication Flow
@@ -95,25 +97,28 @@ backend/
 ## 📡 API Endpoints
 
 ### 🔐 Auth APIs
-| Method | Endpoint | Description |
-|------|--------|------------|
-| POST | `/api/auth/register` | Register user |
-| POST | `/api/auth/login` | Login & get JWT |
-| PUT | `/api/auth/change-password` | Change password |
-| POST | `/api/auth/forgot-password` | Send OTP |
-| POST | `/api/auth/reset-password` | Reset password |
+
+| Method | Endpoint                    | Description     |
+| ------ | --------------------------- | --------------- |
+| POST   | `/api/auth/register`        | Register user   |
+| POST   | `/api/auth/login`           | Login & get JWT |
+| PUT    | `/api/auth/change-password` | Change password |
+| POST   | `/api/auth/forgot-password` | Send OTP        |
+| POST   | `/api/auth/reset-password`  | Reset password  |
 
 ### 👤 User APIs
-| Method | Endpoint | Access |
-|------|--------|-------|
-| GET | `/api/users/me` | Authenticated |
-| PUT | `/api/users/me` | Authenticated |
+
+| Method | Endpoint        | Access        |
+| ------ | --------------- | ------------- |
+| GET    | `/api/users/me` | Authenticated |
+| PUT    | `/api/users/me` | Authenticated |
 | DELETE | `/api/users/me` | Authenticated |
 
 ### 🛡 Admin APIs
-| Method | Endpoint | Access |
-|------|--------|-------|
-| GET | `/api/admin/users` | Admin only |
+
+| Method | Endpoint           | Access     |
+| ------ | ------------------ | ---------- |
+| GET    | `/api/admin/users` | Admin only |
 
 ---
 
@@ -134,6 +139,8 @@ JWT_SECRET=your_jwt_secret
 
 MAIL_USER=your_email@gmail.com
 MAIL_PASS=your_gmail_app_password
+```
+
 🛠 Setup & Run
 1️⃣ Install dependencies
 npm install
@@ -169,13 +176,10 @@ Internship Submissions
 
 Backend Learning Reference
 
-👨‍💻 Author
-Chirag
-Backend Developer (Learning MERN Stack)
-
 📜 License
 This project is for educational purposes.
 =======
+
 # AuthProject
+
 This is an Auth based project using express.
->>>>>>> 0c9a81da9b03b10f8617f190eec73b8496274910
