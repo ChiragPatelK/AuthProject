@@ -8,11 +8,16 @@ function Register() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
+    setLoading(true);
+    
     setError("");
     setSuccess("");
 
@@ -42,8 +47,11 @@ function Register() {
       setTimeout(() => {
         navigate("/login");
       }, 1500);
+    // eslint-disable-next-line no-unused-vars
     } catch (err) {
       setError("Server error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -89,8 +97,12 @@ function Register() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button className="w-full bg-blue-500 py-2 rounded">
-          Register
+        <button
+          disabled={loading}
+          className={`w-full py-2 rounded ${loading ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"
+            }`}
+        >
+          {loading ? "Register in..." : "Register"}
         </button>
         <p className="mt-4 text-sm text-center text-slate-400">
           Already have an account?{" "}

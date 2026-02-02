@@ -7,36 +7,59 @@ function Profile() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const updateProfile = async () => {
-    const res = await fetch(
-      "http://localhost:5000/api/users/me",
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ name, email }),
-      }
-    );
+    if(loading) return;
+    setLoading(true)
+    const payload = {};
+    
+    if (name.trim()) payload.name = name;
+    if (email.trim()) payload.email = email;
+
+    if (Object.keys(payload).length === 0) {
+      alert("Nothing to update");
+      return;
+    }
+
+    const res = await fetch("http://localhost:5000/api/users/me", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
 
     const data = await res.json();
 
     if (!res.ok) {
       alert(data.message || "Update failed");
+      setLoading(false)
       return;
     }
-
-    setMessage("Profile updated");
+    
+    setMessage("Profile updated successfully");
+    
+    // ✅ reset inputs
+    setName("");
+    setEmail("");
+    setLoading(false)
   };
+  
 
   const deleteAccount = async () => {
+    if (loading) return;
+    setLoading(true)
+
     const confirmDelete = window.confirm(
       "This will permanently delete your account. Continue?"
     );
 
-    if (!confirmDelete) return;
+    if (!confirmDelete) {
+      setLoading(false)
+      return;
+    }
 
     await fetch("http://localhost:5000/api/users/me", {
       method: "DELETE",
@@ -45,6 +68,7 @@ function Profile() {
       },
     });
 
+    setLoading(false)
     logout();
   };
 
@@ -71,27 +95,29 @@ function Profile() {
       />
 
       <button
+        disabled={loading}
         onClick={updateProfile}
         className="bg-blue-500 px-4 py-2 mr-2 rounded"
       >
-        Update Profile
+        {loading ? "Loading..." : "Update"}
       </button>
 
       <button
+        disabled={loading}
         onClick={deleteAccount}
         className="bg-red-500 px-4 py-2 rounded"
       >
-        Delete Account
+        {loading ? "Loading..." : "Delete"}
       </button>
 
       <button
         className="bg-red-500 px-4 py-2 rounded ml-2">
-      <a
-        href="/change-password"
+        <a
+          href="/change-password"
         // className="inline-block mt-4 text-blue-400 hover:underline"
-      >
-        Change Password
-      </a>
+        >
+          Change Password
+        </a>
       </button>
     </div>
   );

@@ -1,23 +1,30 @@
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("");
+
+    if (loading) return;
+
     setError("");
+    setMessage("");
+    setLoading(true);
 
     try {
       const res = await fetch(
         "http://localhost:5000/api/auth/forgot-password",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),
         }
       );
@@ -29,14 +36,21 @@ function ForgotPassword() {
         return;
       }
 
-      // Backend sends generic success message
-      setMessage(
-        "If the email exists, an OTP has been sent."
-      );
-    } catch (err) {
-      setError("Server error");
+      setMessage("OTP sent. Redirecting...");
+
+      // ✅ REDIRECT after success
+      setTimeout(() => {
+        navigate("/reset-password", {
+          state: { email }, // optional UX improvement
+        });
+      }, 1500);
+    } catch {
+      setError("Unable to connect to server");
+    } finally {
+      setLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-900">
@@ -66,8 +80,12 @@ function ForgotPassword() {
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        <button className="w-full bg-blue-500 py-2 rounded">
-          Send OTP
+        <button
+          disabled={loading}
+          className={`w-full py-2 rounded ${loading ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"
+            }`}
+        >
+          {loading ? "Loading..." : "Send otp"}
         </button>
       </form>
     </div>

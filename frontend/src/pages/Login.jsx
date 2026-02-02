@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -7,14 +8,17 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
+    setLoading(true);
+    
     setError("");
-
     try {
       const res = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
@@ -46,6 +50,8 @@ function Login() {
       navigate("/profile");
     } catch (err) {
       setError("Server error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -77,8 +83,12 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button className="w-full bg-blue-500 py-2 rounded">
-          Login
+        <button
+          disabled={loading}
+          className={`w-full py-2 rounded ${loading ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"
+            }`}
+        >
+          {loading ? "Logging in..." : "Login"}
         </button>
         <div className="mt-4 text-sm text-center text-slate-400">
           <p>

@@ -7,11 +7,15 @@ function ResetPassword() {
   const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
+    setLoading(true);
+
     setError("");
     setSuccess("");
 
@@ -43,8 +47,11 @@ function ResetPassword() {
       setTimeout(() => {
         navigate("/login");
       }, 1500);
+    // eslint-disable-next-line no-unused-vars
     } catch (err) {
       setError("Server error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -94,8 +101,12 @@ function ResetPassword() {
           }
         />
 
-        <button className="w-full bg-blue-500 py-2 rounded">
-          Reset Password
+        <button
+          disabled={loading}
+          className={`w-full py-2 rounded ${loading ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"
+            }`}
+        >
+          {loading ? "Logging in..." : "Reset password"}
         </button>
       </form>
     </div>

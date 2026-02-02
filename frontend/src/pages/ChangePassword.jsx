@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -10,9 +11,13 @@ function ChangePassword() {
   const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
+    setLoading(true);
+
     setError("");
     setSuccess("");
 
@@ -49,6 +54,8 @@ function ChangePassword() {
       }, 1500);
     } catch (err) {
       setError("Server error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -88,8 +95,12 @@ function ChangePassword() {
           onChange={(e) => setNewPassword(e.target.value)}
         />
 
-        <button className="w-full bg-blue-500 py-2 rounded">
-          Change Password
+        <button
+          disabled={loading}
+          className={`w-full py-2 rounded ${loading ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"
+            }`}
+        >
+          {loading ? "Logging in..." : "Change password"}
         </button>
       </form>
     </div>

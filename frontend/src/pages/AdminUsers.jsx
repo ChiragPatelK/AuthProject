@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
@@ -14,6 +15,7 @@ function AdminUsers() {
   const [editName, setEditName] = useState("");
   const [editEmail, setEditEmail] = useState("");
   const [editRole, setEditRole] = useState("user");
+  const [loadingReq, setLoadingReq] = useState(false);
 
   /* ===============================
      FETCH ALL USERS (ADMIN API)
@@ -58,6 +60,9 @@ function AdminUsers() {
 
     if (!confirmDelete) return;
 
+    if (loadingReq) return;
+    setLoadingReq(true);
+
     try {
       const res = await fetch(
         `http://localhost:5000/api/admin/users/${id}`,
@@ -78,6 +83,8 @@ function AdminUsers() {
       setUsers(users.filter((u) => u.id !== id));
     } catch (err) {
       alert("Server error");
+    } finally {
+      setLoadingReq(false);
     }
   };
 
@@ -95,6 +102,8 @@ function AdminUsers() {
      UPDATE USER
   =============================== */
   const updateUser = async (id) => {
+    if (loadingReq) return;
+    setLoadingReq(true);
     try {
       const res = await fetch(
         `http://localhost:5000/api/admin/users/${id}`,
@@ -129,6 +138,8 @@ function AdminUsers() {
       setEditingUser(null);
     } catch (err) {
       alert("Server error");
+    } finally {
+      setLoadingReq(false);
     }
   };
 
@@ -245,10 +256,11 @@ function AdminUsers() {
                   {editingUser === user.id ? (
                     <>
                       <button
+                        disabled={loadingReq}
                         onClick={() => updateUser(user.id)}
                         className="bg-green-500 px-3 py-1 rounded text-sm"
                       >
-                        Save
+                        {loadingReq?"updating...":"Update"}
                       </button>
                       <button
                         onClick={() => setEditingUser(null)}
@@ -266,10 +278,11 @@ function AdminUsers() {
                         Edit
                       </button>
                       <button
+                        disabled={loadingReq}
                         onClick={() => deleteUser(user.id)}
                         className="bg-red-500 px-3 py-1 rounded text-sm"
                       >
-                        Delete
+                        {loadingReq?"Loading...": "Delete"}
                       </button>
                     </>
                   )}
