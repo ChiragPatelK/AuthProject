@@ -1,6 +1,6 @@
-/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { forgotPasswordSchema } from "../validators/auth.schema";
 
 
 function ForgotPassword() {
@@ -17,6 +17,16 @@ function ForgotPassword() {
 
     setError("");
     setMessage("");
+    const result = forgotPasswordSchema.safeParse({
+      email,
+    });
+
+    if (!result.success) {
+      const firstError = result.error.issues[0];
+      setError(firstError.message);
+      return;
+    }
+
     setLoading(true);
 
     try {

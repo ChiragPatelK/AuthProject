@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { updateProfileSchema } from "../validators/update.schema";
 
 function Profile() {
   const { token, logout } = useAuth();
@@ -10,43 +11,54 @@ function Profile() {
   const [loading, setLoading] = useState(false);
 
   const updateProfile = async () => {
-    if(loading) return;
-    setLoading(true)
+    if (loading) return;
+
     const payload = {};
-    
     if (name.trim()) payload.name = name;
     if (email.trim()) payload.email = email;
 
-    if (Object.keys(payload).length === 0) {
-      alert("Nothing to update");
+    // ✅ ZOD VALIDATION
+    const result = updateProfileSchema.safeParse(payload);
+
+    if (!result.success) {
+      setMessage(result.error.issues[0].message);
       return;
     }
 
-    const res = await fetch("http://localhost:5000/api/users/me", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(payload),
-    });
+    setLoading(true);
 
-    const data = await res.json();
+    try {
+      const res = await fetch(
+        "http://localhost:5000/api/users/me",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(result.data),
+        }
+      );
 
-    if (!res.ok) {
-      alert(data.message || "Update failed");
-      setLoading(false)
-      return;
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMessage(data.message || "Update failed");
+        return;
+      }
+
+      setMessage("Profile updated successfully");
+
+      // reset fields
+      setName("");
+      setEmail("");
+    } catch {
+      setMessage("Unable to update profile");
+    } finally {
+      setLoading(false);
     }
-    
-    setMessage("Profile updated successfully");
-    
-    // ✅ reset inputs
-    setName("");
-    setEmail("");
-    setLoading(false)
   };
-  
+
 
   const deleteAccount = async () => {
     if (loading) return;

@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { decodeToken } from "../utils/jwt";
+import { loginSchema } from "../validators/auth.schema";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -15,51 +16,55 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (loading) return;
-    setLoading(true);
-    
+
     setError("");
+
+    // ✅ ZOD VALIDATION
+    const result = loginSchema.safeParse({
+      email,
+      password,
+    });
+
+    if (!result.success) {
+      setError(result.error.issues[0].message);
+      return;
+    }
+
+    setLoading(true);
+
     try {
       const res = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(result.data), // validated data
       });
 
       const data = await res.json();
 
-      const decoded = decodeToken(data.token);
-
-      if (!decoded) {
-        setError("Invalid token received");
-        return;
-      }
-
-      login(data.token, decoded.role);
       if (!res.ok) {
         setError(data.message || "Login failed");
         return;
       }
 
-      // 🔐 backend should return token + role inside token
-      // for now we assume role is inside JWT payload
-      // role will be improved later
-
+      const decoded = decodeToken(data.token);
+      login(data.token, decoded.role);
       navigate("/profile");
-    } catch (err) {
-      setError("Server error");
+    } catch {
+      setError("Unable to connect to server");
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-900">
       <form
         onSubmit={handleSubmit}
         className="bg-slate-800 p-6 rounded-lg w-80"
+        noValidate
       >
         <h2 className="text-xl font-bold mb-4">Login</h2>
 
@@ -102,12 +107,9 @@ function Login() {
 
           <p className="mt-2">
             Don’t have an account?{" "}
-            <a
-              href="/register"
-              className="text-blue-400 hover:underline"
-            >
-              Register
-            </a>
+            <Link to="/register" className="text-blue-500 underline">
+              Click here to Register
+            </Link>
           </p>
         </div>
 

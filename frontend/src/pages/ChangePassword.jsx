@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { changePasswordSchema } from "../validators/auth.schema";
 
 function ChangePassword() {
   const { token, logout } = useAuth();
@@ -16,11 +17,23 @@ function ChangePassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
-    setLoading(true);
 
     setError("");
     setSuccess("");
 
+    const result = changePasswordSchema.safeParse({
+      oldPassword,
+      newPassword,
+    });
+
+    if (!result.success) {
+      const firstError = result.error.issues[0];
+      setError(firstError.message);
+      return;
+    }
+
+
+    setLoading(true);
     try {
       const res = await fetch(
         "http://localhost:5000/api/auth/change-password",

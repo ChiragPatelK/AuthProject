@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Login from "./Login";
+import { useNavigate, Link } from "react-router-dom";
+import { registerSchema } from "../validators/auth.schema";
 
 function Register() {
   const [name, setName] = useState("");
@@ -16,11 +16,23 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
-    setLoading(true);
-    
+
     setError("");
     setSuccess("");
+    const result = registerSchema.safeParse({
+      name,
+      email,
+      password,
+    });
 
+    if (!result.success) {
+      const firstError = result.error.issues[0];
+      setError(firstError.message);
+      return;
+    }
+
+
+    setLoading(true);
     try {
       const res = await fetch("http://localhost:5000/api/auth/register", {
         method: "POST",
@@ -47,7 +59,7 @@ function Register() {
       setTimeout(() => {
         navigate("/login");
       }, 1500);
-    // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line no-unused-vars
     } catch (err) {
       setError("Server error");
     } finally {
@@ -60,6 +72,7 @@ function Register() {
       <form
         onSubmit={handleSubmit}
         className="bg-slate-800 p-6 rounded-lg w-80"
+        noValidate
       >
         <h2 className="text-xl font-bold mb-4">Register</h2>
 
@@ -104,15 +117,14 @@ function Register() {
         >
           {loading ? "Register in..." : "Register"}
         </button>
-        <p className="mt-4 text-sm text-center text-slate-400">
-          Already have an account?{" "}
-          <a
-            href="/login"
-            className="text-blue-400 hover:underline"
-          >
-            Login
-          </a>
-        </p>
+        <div className="mt-4 text-sm text-center text-slate-400">
+          <p className="mt-2">
+            Already have an account?{" "}
+            <Link to="/login" className="text-blue-500 underline">
+              Click here to Login
+            </Link>
+          </p>
+        </div>
 
       </form>
     </div>

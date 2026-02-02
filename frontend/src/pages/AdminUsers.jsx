@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { updateProfileSchema } from "../validators/update.schema";
 
 function AdminUsers() {
   const { token } = useAuth();
@@ -103,6 +104,19 @@ function AdminUsers() {
   =============================== */
   const updateUser = async (id) => {
     if (loadingReq) return;
+    const payload = {
+      name: editName,
+      email: editEmail,
+      role: editRole,
+    };
+
+    const result = updateProfileSchema.safeParse(payload);
+
+    if (!result.success) {
+      alert(result.error.issues[0].message);
+      return;
+    }
+
     setLoadingReq(true);
     try {
       const res = await fetch(
@@ -260,7 +274,7 @@ function AdminUsers() {
                         onClick={() => updateUser(user.id)}
                         className="bg-green-500 px-3 py-1 rounded text-sm"
                       >
-                        {loadingReq?"updating...":"Update"}
+                        {loadingReq ? "updating..." : "Update"}
                       </button>
                       <button
                         onClick={() => setEditingUser(null)}
@@ -282,7 +296,7 @@ function AdminUsers() {
                         onClick={() => deleteUser(user.id)}
                         className="bg-red-500 px-3 py-1 rounded text-sm"
                       >
-                        {loadingReq?"Loading...": "Delete"}
+                        {loadingReq ? "Loading..." : "Delete"}
                       </button>
                     </>
                   )}
